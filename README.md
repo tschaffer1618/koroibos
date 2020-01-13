@@ -14,7 +14,7 @@
 - To test this app, run `npm test`
 
 ## Agile Board Link
-- This app's agile board can be accessed [here]()
+- This app's agile board can be accessed [here](https://github.com/tschaffer1618/koroibos/projects/1)
 
 ## Heroku Production Link
 - This app and its production endpoints can be accessed [here via Heroku]()
