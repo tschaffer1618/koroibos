@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "cookie-parser": "~1.4.4",
+    "csvtojson": "~2.0.10",
     "debug": "~2.6.9",
     "dotenv": "^8.2.0",
     "express": "~4.16.1",
