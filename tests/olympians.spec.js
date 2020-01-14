@@ -6,92 +6,60 @@ const environment = process.env.NODE_ENV || 'test';
 const configuration = require('../knexfile')[environment];
 const database = require('knex')(configuration);
 
+const seed = require('../seedRunnerHelper')
+
 describe('Test', () => {
   beforeEach(async () => {
     await database.raw('TRUNCATE TABLE olympian_events CASCADE');
     await database.raw('TRUNCATE TABLE olympians CASCADE');
     await database.raw('TRUNCATE TABLE events CASCADE');
 
-    const olympian1 = {
-      name: 'Aquaman',
-      sex: 'M',
-      age: 35,
-      height: 180,
-      weight: 96,
-      team: 'Superhero',
-      sport: 'Swimming'
+    const row1 = {
+      Name: 'Aquaman',
+      Sex: 'M',
+      Age: 35,
+      Height: 180,
+      Weight: 96,
+      Team: 'Superhero',
+      Sport: 'Swimming',
+      Event: '100m Fly',
+      Medal: 'Gold'
     }
 
-    const olympian2 = {
-      name: 'Michael Phelps',
-      sex: 'M',
-      age: 32,
-      height: 176,
-      weight: 80,
-      team: 'Human',
-      sport: 'Swimming'
+    const row2 = {
+      Name: 'Michael Phelps',
+      Sex: 'M',
+      Age: 32,
+      Height: 176,
+      Weight: 80,
+      Team: 'Human',
+      Sport: 'Swimming',
+      Event: '5000m Freestyle',
+      Medal: 'Silver'
     }
 
-    const olympian3 = {
-      name: 'Little Mermaid',
-      sex: 'F',
-      age: 24,
-      height: 140,
-      weight: 62,
-      team: 'Mermaid',
-      sport: 'Swimming'
+    const row3 = {
+      Name: 'Little Mermaid',
+      Sex: 'F',
+      Age: 24,
+      Height: 140,
+      Weight: 62,
+      Team: 'Mermaid',
+      Sport: 'Swimming',
+      Event: '100m Fly',
+      Medal: 'Bronze'
     }
 
-    const event1 = {
-      sport: 'Swimming',
-      event: '100m Fly'
-    }
+    let aquaman = await seed.createOlympian(row1);
+    let phelps = await seed.createOlympian(row2);
+    let mermaid = await seed.createOlympian(row3);
 
-    const event2 = {
-      sport: 'Swimming',
-      event: '5000m Freestyle'
-    }
+    let fly = await seed.createEvent(row1);
+    let free = await seed.createEvent(row2);
 
-    let aquaman = await database('olympians').insert(olympian1, 'id')
-    let phelps = await database('olympians').insert(olympian2, 'id')
-    let mermaid = await database('olympians').insert(olympian3, 'id')
-
-    let fly = await database('events').insert(event1, 'id')
-    let free = await database('events').insert(event2, 'id')
-
-    const olympianEvent1 = {
-      olympian_id: aquaman.id,
-      event_id: fly.id,
-      medal: 'Gold'
-    }
-
-    const olympianEvent2 = {
-      olympian_id: aquaman.id,
-      event_id: free.id,
-      medal: 'Bronze'
-    }
-
-    const olympianEvent3 = {
-      olympian_id: mermaid.id,
-      event_id: fly.id,
-      medal: 'Silver'
-    }
-    const olympianEvent4 = {
-      olympian_id: phelps.id,
-      event_id: fly.id,
-      medal: 'Silver'
-    }
-    const olympianEvent5 = {
-      olympian_id: phelps.id,
-      event_id: free.id,
-      medal: 'Gold'
-    }
-
-    await database('olympian_events').insert(olympianEvent1, 'id')
-    await database('olympian_events').insert(olympianEvent2, 'id')
-    await database('olympian_events').insert(olympianEvent3, 'id')
-    await database('olympian_events').insert(olympianEvent4, 'id')
-    await database('olympian_events').insert(olympianEvent5, 'id')
+    await seed.createOlympianEvent(row1, aquaman, fly);
+    await seed.createOlympianEvent(row2, phelps, free);
+    await seed.createOlympianEvent(row3, mermaid, fly);
   })
 
   afterEach(() => {
@@ -105,6 +73,8 @@ describe('Test', () => {
       const res = await request(app).get('/api/v1/olympians');
 
       expect(res.statusCode).toBe(200);
+      expect(res.body).toHaveProperty('olympians');
+      expect(res.body.olympians.length).toBe(3);
     })
   })
 })
