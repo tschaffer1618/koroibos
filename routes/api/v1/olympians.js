@@ -19,7 +19,11 @@ const getAllOlympians = router.get('/', async (request, response) => {
     'INNER JOIN olympian_events ON olympians.id = olympian_events.olympian_id ' +
     'GROUP BY olympians.name, olympians.team, olympians.age, olympians.sport ' +
     additionalQuery);
-  response.status(200).send({'olympians': olympians['rows']});
+  if (request.query.age === 'youngest' || request.query.age === 'oldest') {
+    response.status(200).json(olympians['rows']);
+  } else {
+    response.status(200).send({'olympians': olympians['rows']});
+  }
 })
 
 module.exports = {
