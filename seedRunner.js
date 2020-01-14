@@ -8,7 +8,7 @@ const Olympian = require('./models/olympian')
 const Event = require('./models/event')
 const OlympianEvent = require('./models/olympianEvent')
 
-const seed = require('./seedRunnnerHelper')
+const seed = require('./seedRunnerHelper')
 
 async function cleanTables() {
   await database.raw('TRUNCATE TABLE olympian_events CASCADE');
