@@ -7,7 +7,7 @@ const database = require('knex')(configuration);
 
 const getOlympianStats = router.get('/', async (request, response) => {
 
-}
+})
 
 module.exports = {
   getOlympianStats
