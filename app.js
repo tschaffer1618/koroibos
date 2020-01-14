@@ -9,6 +9,7 @@ const configuration = require('./knexfile')[environment];
 
 var indexRouter = require('./routes/index');
 var olympiansRouter = require('./routes/api/v1/olympians');
+var olympianStatsRouter = require('./routes/api/v1/olympianStats');
 
 var app = express();
 
@@ -20,5 +21,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/api/v1/olympians', olympiansRouter.getAllOlympians)
+app.use('/api/v1/olympian_stats', olympianStatsRouter.getOlympianStats)
 
 module.exports = app;
