@@ -68,13 +68,40 @@ describe('Test', () => {
     database.raw('TRUNCATE TABLE events CASCADE');
   })
 
-  describe('GET all olympians', () => {
+  describe('GET olympian(s)', () => {
     it('from the olympians endpoint', async () => {
       const res = await request(app).get('/api/v1/olympians');
 
       expect(res.statusCode).toBe(200);
       expect(res.body).toHaveProperty('olympians');
       expect(res.body.olympians.length).toBe(3);
+      expect(res.body.olympians[0].name).toBe('Little Mermaid');
+      expect(res.body.olympians[0].team).toBe('Mermaid');
+      expect(res.body.olympians[0].age).toBe(24);
+      expect(res.body.olympians[0].sport).toBe('Swimming');
+      expect(res.body.olympians[0].total_medals_won).toBe(1)
+    })
+
+    it('that is the youngest', async() => {
+      const res = await request(app).get('/api/v1/olympians?age=youngest');
+
+      expect(res.statusCode).toBe(200);
+      expect(res.body[0].name).toBe('Little Mermaid');
+      expect(res.body[0].team).toBe('Mermaid');
+      expect(res.body[0].age).toBe(24);
+      expect(res.body[0].sport).toBe('Swimming');
+      expect(res.body[0].total_medals_won).toBe(1)
+    })
+
+    it('that is the oldest', async() => {
+      const res = await request(app).get('/api/v1/olympians?age=oldest');
+
+      expect(res.statusCode).toBe(200);
+      expect(res.body[0].name).toBe('Aquaman');
+      expect(res.body[0].team).toBe('Superhero');
+      expect(res.body[0].age).toBe(35);
+      expect(res.body[0].sport).toBe('Swimming');
+      expect(res.body[0].total_medals_won).toBe(1)
     })
   })
 })
