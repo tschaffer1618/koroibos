@@ -83,4 +83,21 @@ describe('Test', () => {
       expect(res.body.events[0].events[1]).toBe('5000m Freestyle');
     })
   })
+
+  describe('GET an event and its medalists', () => {
+    it('from the event medalist endpoint', async () => {
+      let fly_event = await database('events').where({event: '100m Fly'}).select('id')
+      const res = await request(app).get(`/api/v1/events/${fly_event}/medalists`)
+
+      expect(res.statusCode).toBe(200);
+      expect(res.body).toHaveProperty('event');
+      expect(res.body.event).toBe('100m Fly');
+      expect(res.body).toHaveProperty('medalists');
+      expect(res.body.medalists.length).toBe(2);
+      expect(res.body.medalists[0].name).toBe('Aquaman');
+      expect(res.body.medalists[0].team).toBe('Superhero');
+      expect(res.body.medalists[0].age).toBe(35);
+      expect(res.body.medalists[0].medal).toBe('Gold');  
+    })
+  })
 })
