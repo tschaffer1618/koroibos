@@ -85,7 +85,7 @@ describe('Test', () => {
   })
 
   describe('GET an event and its medalists', () => {
-    it('from the event medalist endpoint', async () => {
+    it('by passing in a valid event id', async () => {
       const flyEvent = await database('events').where({event: '100m Fly'}).select('id')
       const flyEventId = flyEvent[0].id
       const res = await request(app).get(`/api/v1/events/${flyEventId}/medalists`)
@@ -99,6 +99,16 @@ describe('Test', () => {
       expect(res.body.medalists[0].team).toBe('Superhero');
       expect(res.body.medalists[0].age).toBe(35);
       expect(res.body.medalists[0].medal).toBe('Gold');
+    })
+
+    it('returns an error if the id is invalid', async () => {
+      const flyEvent = await database('events').where({event: '100m Fly'}).select('id')
+      const flyEventId = flyEvent[0].id
+      const wrongId = flyEventId + 100
+      const res = await request(app).get(`/api/v1/events/${wrongId}/medalists`)
+
+      expect(res.statusCode).toBe(404);
+      expect(res.body.error).toBe('Event not found')
     })
   })
 })
