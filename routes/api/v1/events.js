@@ -22,6 +22,33 @@ const getAllEvents = router.get('/', async (request, response) => {
   response.status(200).send({'events': data});
 })
 
+async function getMedalists(eventId) {
+  var medalists = await database('olympian_events')
+    .innerJoin('olympians', 'olympian_events.olympian_id', 'olympians.id')
+    .innerJoin('events', 'olympian_events.event_id', 'events.id')
+    .where('olympian_events.event_id', eventId)
+    .whereIn('olympian_events.medal', ['Gold', 'Silver', 'Bronze'])
+    .select('olympians.name', 'olympians.team', 'olympians.age', 'olympian_events.medal')
+    .orderByRaw("CASE WHEN medal = 'Gold' THEN '1' WHEN medal = 'Silver' THEN '2' WHEN medal = 'Bronze' THEN '3' END")
+  if (medalists[0]) {
+    return medalists
+  } else {
+    return []
+  }
+}
+
+const getEventMedalists = router.get('/:id/medalists', async (request, response) => {
+  const eventId = request.params.id;
+  const chosenEvent = await database('events').where('id', eventId);
+  if (chosenEvent[0]) {
+    const data = await getMedalists(eventId);
+    response.status(200).send({'event': chosenEvent[0].event, 'medalists': data })
+  } else {
+    response.status(404).send({ error: 'Event not found' })
+  }
+})
+
 module.exports = {
-  getAllEvents
+  getAllEvents,
+  getEventMedalists
 }

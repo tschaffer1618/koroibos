@@ -24,5 +24,6 @@ app.use('/', indexRouter);
 app.use('/api/v1/olympians', olympiansRouter.getAllOlympians)
 app.use('/api/v1/olympian_stats', olympianStatsRouter.getOlympianStats)
 app.use('/api/v1/events', eventsRouter.getAllEvents)
+app.use('/api/v1/events', eventsRouter.getEventMedalists)
 
 module.exports = app;

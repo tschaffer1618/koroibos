@@ -86,8 +86,9 @@ describe('Test', () => {
 
   describe('GET an event and its medalists', () => {
     it('from the event medalist endpoint', async () => {
-      let fly_event = await database('events').where({event: '100m Fly'}).select('id')
-      const res = await request(app).get(`/api/v1/events/${fly_event}/medalists`)
+      const flyEvent = await database('events').where({event: '100m Fly'}).select('id')
+      const flyEventId = flyEvent[0].id
+      const res = await request(app).get(`/api/v1/events/${flyEventId}/medalists`)
 
       expect(res.statusCode).toBe(200);
       expect(res.body).toHaveProperty('event');
@@ -97,7 +98,7 @@ describe('Test', () => {
       expect(res.body.medalists[0].name).toBe('Aquaman');
       expect(res.body.medalists[0].team).toBe('Superhero');
       expect(res.body.medalists[0].age).toBe(35);
-      expect(res.body.medalists[0].medal).toBe('Gold');  
+      expect(res.body.medalists[0].medal).toBe('Gold');
     })
   })
 })
